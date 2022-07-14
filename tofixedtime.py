@@ -15,9 +15,13 @@ def procsegment(d_xyz, v_raw, t_s, a_lim):
     n = math.ceil(trvl_len / v_raw / t_s)
     v_raw = trvl_len / (n * t_s)  # to account for ceil()
 
+    # To limit the net acceleration, account for the axis
+    # distribution first
+    a_lim_net = a_lim * trvl_len / (abs(d_xyz[0]) + abs(d_xyz[1]) + abs(d_xyz[2]))
+
     # Coefficient of linear filter is determined by the
     # target velocity divided by acceleration limit and sample time
-    m = math.ceil(v_raw / (a_lim * t_s))
+    m = math.ceil(v_raw / (a_lim_net * t_s))
 
     v = [0.0] * (n + m - 1)
 
